@@ -1,0 +1,153 @@
+Future Interns – Task 1
+Vulnerability Assessment Report
+
+Target:  https://demoqa.com/
+
+Assessment Type:  Passive / Non-Intrusive Web Security Assessment
+
+Tools:  Google Chrome DevTools, Nmap, OWASP ZAP
+
+Scope:  Publicly accessible DemoQA web application
+
+Testing Restrictions:
+- No exploitation
+- No brute force
+- No credential attacks
+- No authentication bypass
+- No denial-of-service testing
+- No aggressive scanning
+- No destructive testing
+
+Objective:  Identify observable security misconfigurations and security-header weaknesses and provide remediation recommendations.
+
+
+ASSESSMENT FINDINGS:
+
+Finding 01:
+
+Title: Missing Content Security Policy (CSP)
+Severity: Medium
+Confidence: High
+Target: https://demoqa.com/
+Evidence: 01-CSP.png
+Description:
+The application response does not include a Content-Security-Policy
+header. CSP provides browser-level restrictions that can reduce the
+impact of certain content injection and cross-site scripting attacks.
+
+Recommendation:
+Implement an appropriate Content-Security-Policy response header
+using a restrictive policy suitable for the application's resources.
+
+
+Finding 02:
+
+Title: Missing Anti-clickjacking Header
+Severity: Medium
+Confidence: Medium
+Target: https://demoqa.com/
+Evidence: 02-Anti-Clickjacking.png
+Description:
+The application response does not provide an evident anti-clickjacking
+protection mechanism through X-Frame-Options or an equivalent
+frame-ancestors directive.
+
+Recommendation:
+Implement X-Frame-Options or preferably an appropriate CSP
+frame-ancestors policy to control whether the application can be
+embedded by other websites.
+
+
+Finding 03:
+
+Title: Vulnerable JavaScript Library – DOMPurify 3.2.6
+Severity: Medium
+Confidence: Medium
+Target:
+https://demoqa.com/swagger-ui-bundle.js
+Evidence: 03-DOMPurify.png
+Description:
+OWASP ZAP's Retire.js passive analysis identified DOMPurify version
+3.2.6 in the application's JavaScript bundle and associated it with
+known CVE identifiers.
+
+CVE References:
+CVE-2026-66010
+CVE-2026-75838
+
+Recommendation:
+Upgrade DOMPurify to a current secure release and maintain a process
+for monitoring and updating third-party JavaScript dependencies.
+
+
+Finding 04:
+
+Title: Server Version Information Disclosure
+Severity: Low
+Confidence: High
+Target: https://demoqa.com/
+Evidence: 04-Server-Version.png
+Observed Header:
+Server: nginx/1.17.10 (Ubuntu)
+
+Description:
+The HTTP response exposes the web server software and version
+information through the Server response header.
+
+Recommendation:
+Configure the web server to minimize unnecessary version disclosure
+in HTTP response headers.
+
+
+Finding 05:
+
+Title: X-Powered-By Information Disclosure
+Severity: Low
+Confidence: Medium
+Target: https://demoqa.com/
+Evidence: 05-X-Powered-By.png
+Observed Header:
+X-Powered-By: Express
+
+Description:
+The application exposes framework/technology information through
+the X-Powered-By response header.
+
+Recommendation:
+Disable or remove the X-Powered-By header in production.
+
+
+Finding 06:
+
+Title: Missing X-Content-Type-Options Header
+Severity: Low
+Confidence: Medium
+Target: https://demoqa.com/
+Evidence: 06-X-Content-Type-Options.png
+Description:
+The HTTP response does not include the X-Content-Type-Options
+security header.
+
+Recommendation:
+Configure the application or web server to return:
+
+X-Content-Type-Options: nosniff
+
+This helps prevent browsers from MIME-sniffing responses away from
+the declared content type.
+
+
+
+ASSESSMENT LIMITATIONS:
+- Testing was performed against the publicly accessible DemoQA
+  environment.
+- Assessment was limited to passive/non-intrusive security testing.
+- No exploitation was performed.
+- No brute-force, credential attacks, denial-of-service, or destructive
+  testing was performed.
+- Findings identified by automated tooling were manually reviewed
+  before inclusion.
+- The assessment represents observations during the testing period
+  and does not guarantee the absence of other vulnerabilities.
+- Third-party JavaScript dependency findings should be independently
+  validated against current vendor and vulnerability information.
